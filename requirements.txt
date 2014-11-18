@@ -1,0 +1,2 @@
+beautifulsoup4==4.3.2
+finsymbols==0.3.5
