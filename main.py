@@ -53,7 +53,7 @@ def find_shared_members(boards, prune=True):
     for symbol, members in boards.items():
         for member in members:
             if member in sharedMembers:
-                sharedMembers[member] += symbol
+                sharedMembers[member] += [symbol]
             else:
                 sharedMembers[member] = [symbol]
 
