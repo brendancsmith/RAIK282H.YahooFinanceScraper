@@ -15,6 +15,10 @@ def get_sp500_symbols():
     return [stock['symbol'] for stock in get_sp500_stocks()]
 
 
+# Creates a dictionary of the corporate boards for the companies
+# associated with the specified stock market symbols.
+#   key: stock symbol
+#   value: list of member names
 def scrape_corporate_boards(symbols):
     scraper = MajorHoldersScraper()
     corpBoards = {}
@@ -34,6 +38,8 @@ def main():
     cache = JsonCache('corporate_boards')
     boards = None
 
+    # get a dictionary of the corporate boards
+    # (read from cache, or scrape and write to cache)
     if cache.exists():
         print('reading cache...')
         boards = cache.read()
