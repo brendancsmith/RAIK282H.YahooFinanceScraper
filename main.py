@@ -1,9 +1,8 @@
 #!/usr/bin/env python2
 
 from Scrapers import MajorHoldersScraper
+from Caches import JsonCache
 import finsymbols
-import json
-import os
 
 cachePath = 'corporate_boards.json'
 
@@ -31,30 +30,18 @@ def scrape_corporate_boards(symbols):
     return corpBoards
 
 
-def write_cache(boards):
-    with open(cachePath, 'w') as cache:
-        text = json.dumps(boards)
-
-        cache.write(text)
-
-
-def read_cache():
-    with open(cachePath, 'r') as cache:
-        text = cache.read()
-        return json.loads(text)
-
-
 def main():
+    cache = JsonCache('corporate_boards')
     boards = None
 
-    if os.path.exists(cachePath):
+    if cache.exists():
         print('reading cache...')
-        boards = read_cache()
+        boards = cache.read()
     else:
         symbols = get_sp500_symbols()
 
         boards = scrape_corporate_boards(symbols)
-        write_cache(boards)
+        cache.write(boards)
 
     print('done, {} boards'.format(len(boards)))
 
