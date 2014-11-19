@@ -15,6 +15,12 @@ def get_sp500_symbols():
     return [stock['symbol'] for stock in get_sp500_stocks()]
 
 
+def scrape_sp500_boards():
+    symbols = get_sp500_symbols()
+    boards = scrape_corporate_boards(symbols)
+    return boards
+
+
 # Creates a dictionary of the corporate boards for the companies
 # associated with the specified stock market symbols.
 #   key: stock symbol
@@ -61,18 +67,8 @@ def find_shared_members(boards, prune=True):
 
 def main():
     cache = JsonCache('corporate_boards')
-    boards = None
 
-    # get a dictionary of the corporate boards
-    # (read from cache, or scrape and write to cache)
-    if cache.exists():
-        print('reading cache...')
-        boards = cache.read()
-    else:
-        symbols = get_sp500_symbols()
-
-        boards = scrape_corporate_boards(symbols)
-        cache.write(boards)
+    boards = cache.retrieve(scrape_sp500_boards)
 
     print('found {} boards'.format(len(boards)))
 

@@ -30,6 +30,16 @@ class AbstractCache(object):
     def decode(self, text):
         raise NotImplementedError('Must override with decoding standard.')
 
+    # If the cache exists, return the contents. If not, return the result of
+    # sourceFunction and cache it
+    def retrieve(self, sourceFunction):
+        if self.exists():
+            return self.read()
+        else:
+            result = sourceFunction()
+            self.write(result)
+            return result
+
 
 class JsonCache(AbstractCache):
 
