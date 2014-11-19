@@ -34,6 +34,29 @@ def scrape_corporate_boards(symbols):
     return corpBoards
 
 
+# Given a dictionary of corporate boards, create a dictionary of members who
+# are on multiple boards. If prune is false, majority holders of a single
+# company will be included
+#   key: member name
+#   value: list of stock symbols
+def find_shared_members(boards, prune=True):
+    sharedMembers = {}
+
+    for symbol, members in boards.items():
+        for member in members:
+            if member in sharedMembers:
+                sharedMembers[member] += symbol
+            else:
+                sharedMembers[member] = [symbol]
+
+    if(prune):
+        for member, symbols in sharedMembers.items():
+            if len(symbols) < 2:
+                sharedMembers.pop(member)  # purposefully omitting default arg
+
+    return sharedMembers
+
+
 def main():
     cache = JsonCache('corporate_boards')
     boards = None
@@ -49,7 +72,10 @@ def main():
         boards = scrape_corporate_boards(symbols)
         cache.write(boards)
 
-    print('done, {} boards'.format(len(boards)))
+    print('found {} boards'.format(len(boards)))
+
+    import pprint
+    pprint.pprint(find_shared_members(boards))
 
 if __name__ == '__main__':
     main()
