@@ -3,6 +3,9 @@
 from Scrapers import MajorHoldersScraper
 import finsymbols
 import json
+import os
+
+cachePath = 'corporate_boards.json'
 
 
 def get_sp500_stocks():
@@ -18,7 +21,7 @@ def scrape_corporate_boards(symbols):
     corpBoards = {}
 
     for symbol in symbols:
-        print 'scraping {}/{}'.format(symbols.index(symbol), len(symbols))
+        print 'scraping {}/{}...'.format(symbols.index(symbol), len(symbols))
         names = scraper.scrape(symbol)
         corpBoards[symbol] = names
 
@@ -29,22 +32,31 @@ def scrape_corporate_boards(symbols):
 
 
 def write_cache(boards):
-    with open('corporate_boards.json', 'w') as cache:
+    with open(cachePath, 'w') as cache:
         text = json.dumps(boards)
+
         cache.write(text)
 
 
 def read_cache():
-    with open('corporate_boards.json', 'r') as cache:
+    with open(cachePath, 'r') as cache:
         text = cache.read()
         return json.loads(text)
 
 
 def main():
-    symbols = get_sp500_symbols()
+    boards = None
 
-    boards = scrape_corporate_boards(symbols)
-    write_cache(boards)
+    if os.path.exists(cachePath):
+        print('reading cache...')
+        boards = read_cache()
+    else:
+        symbols = get_sp500_symbols()
+
+        boards = scrape_corporate_boards(symbols)
+        write_cache(boards)
+
+    print('done, {} boards'.format(len(boards)))
 
 if __name__ == '__main__':
     main()
