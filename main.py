@@ -24,7 +24,9 @@ def scrape_corporate_boards(symbols):
     corpBoards = {}
 
     for symbol in symbols:
-        print 'scraping {}/{}...'.format(symbols.index(symbol), len(symbols))
+        # not a fan of print statements outside main(), but whatever
+        print 'scraping {}/{}...'.format(symbols.index(symbol) + 1,
+                                         len(symbols))
         names = scraper.scrape(symbol)
         corpBoards[symbol] = names
 
