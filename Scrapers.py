@@ -38,19 +38,23 @@ class MajorHoldersScraper(BaseYahooScraper):
     # not a fan of this structure, but it's organized at least
     @staticmethod
     def _scrape(soup):
-        # get major holders table
-        table = soup.find('table',
-                          attrs={'class': 'yfnc_tableout1'}).find('table')
+        try:
+            # get major holders table
+            table = soup.find('table',
+                              attrs={'class': 'yfnc_tableout1'}).find('table')
 
-        rows = table.findAll('tr')  # includes header, we'll filter it out
-        hasDataCell = lambda x: x.find('td',
-                                       attrs={'class': 'yfnc_tabledata1'})
-        rows = filter(hasDataCell, rows)
+            rows = table.findAll('tr')  # includes header, we'll filter it out
+            hasDataCell = lambda x: x.find('td',
+                                           attrs={'class': 'yfnc_tabledata1'})
+            rows = filter(hasDataCell, rows)
 
-        # content of first column
-        names = [row.find('td').text for row in rows]
+            # content of first column
+            names = [row.find('td').text for row in rows]
 
-        return names
+            return names
+
+        except AttributeError:
+            return []
 
 
 def main():
