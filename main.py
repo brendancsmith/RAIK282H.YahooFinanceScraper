@@ -3,6 +3,7 @@
 from Scrapers import MajorHoldersScraper
 from Caches import JsonCache
 import finsymbols
+import itertools
 
 cachePath = 'corporate_boards.json'
 
@@ -65,6 +66,18 @@ def find_shared_members(boards, prune=True):
     return sharedMembers
 
 
+# given a dictionary of majority holders for multiple companies
+# (from `find_shared_members`), create a network edge list
+def create_edge_list(sharedMembers):
+    edges = set()
+
+    for member, symbols in sharedMembers.items():
+        combinations = itertools.combinations(symbols, 2)
+        edges |= set(combinations)
+
+    return list(edges)
+
+
 def main():
     cache = JsonCache('corporate_boards')
 
@@ -73,8 +86,8 @@ def main():
     print('found {} boards'.format(len(boards)))
 
     sharedMembers = find_shared_members(boards)
-    for member, symbols in sharedMembers.items():
-        print '{}: {}'.format(member, ', '.join(symbols))
+    edges = create_edge_list(sharedMembers)
+    print(edges)
 
 if __name__ == '__main__':
     main()
