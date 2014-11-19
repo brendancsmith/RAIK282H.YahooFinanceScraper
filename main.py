@@ -87,7 +87,10 @@ def main():
 
     sharedMembers = find_shared_members(boards)
     edges = create_edge_list(sharedMembers)
-    print(edges)
+
+    with open('edge_list.txt', 'w') as f:
+        for edge in edges:
+            f.write(','.join(edge) + '\n')
 
 if __name__ == '__main__':
     main()
