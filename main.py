@@ -72,8 +72,9 @@ def main():
 
     print('found {} boards'.format(len(boards)))
 
-    import pprint
-    pprint.pprint(find_shared_members(boards))
+    sharedMembers = find_shared_members(boards)
+    for member, symbols in sharedMembers.items():
+        print '{}: {}'.format(member, ', '.join(symbols))
 
 if __name__ == '__main__':
     main()
