@@ -4,16 +4,33 @@ from Scrapers import MajorHoldersScraper
 import finsymbols
 
 
+def get_sp500_stocks():
+    return finsymbols.get_sp500_symbols()
+
+
 def get_sp500_symbols():
-    return [stock['symbol'] for stock in finsymbols.get_sp500_symbols()]
+    return [stock['symbol'] for stock in get_sp500_stocks()]
+
+
+def scrape_corporate_boards(symbols):
+    scraper = MajorHoldersScraper()
+    corpBoards = {}
+
+    for symbol in symbols:
+        names = scraper.scrape(symbol)
+        corpBoards[symbol] = names
+
+    #for symbol, board in corpBoards.items():
+    #    print '{}: {}'.format(symbol, board)
+
+    return corpBoards
 
 
 def main():
-    print(len(get_sp500_symbols()))
+    symbols = get_sp500_symbols()
 
-    scraper = MajorHoldersScraper()
-    names = scraper.scrape('AAPL')
-    print(names)
+    boards = scrape_corporate_boards(symbols[:5])
+    print(boards)
 
 if __name__ == '__main__':
     main()
