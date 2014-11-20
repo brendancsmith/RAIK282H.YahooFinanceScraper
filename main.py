@@ -84,7 +84,7 @@ def convert_edge_list_to_numeric(symbols, edges):
     for edge in edges:
         x = symbols.index(edge[0])
         y = symbols.index(edge[1])
-        
+
         numericEdges.append((x, y))
 
     return numericEdges
@@ -97,18 +97,16 @@ def main():
     print('found {} boards'.format(len(boards)))
 
     sharedMembers = find_shared_members(boards)
-    edges = create_edge_list(sharedMembers)
 
     JsonCache('multi_holders').write(sharedMembers)
     print('found {} holders of multiple companies'.format(len(sharedMembers)))
 
-    with open('edge_list.txt', 'w') as f:
-        for edge in edges:
-            f.write(','.join(edge) + '\n')
-
+    edges = create_edge_list(sharedMembers)
     symbols = boards.keys()
     numericEdges = convert_edge_list_to_numeric(symbols, edges)
-    print(numericEdges)
+    with open('edge_list.csv', 'w') as f:
+        for edge in numericEdges:
+            f.write(','.join(str(v) for v in edge) + '\n')
 
 
 if __name__ == '__main__':
