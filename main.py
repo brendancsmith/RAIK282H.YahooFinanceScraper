@@ -78,6 +78,18 @@ def create_edge_list(sharedMembers):
     return list(edges)
 
 
+def convert_edge_list_to_numeric(symbols, edges):
+    numericEdges = []
+
+    for edge in edges:
+        x = symbols.index(edge[0])
+        y = symbols.index(edge[1])
+        
+        numericEdges.append((x, y))
+
+    return numericEdges
+
+
 def main():
     cache = JsonCache('corporate_boards')
 
@@ -93,6 +105,11 @@ def main():
     with open('edge_list.txt', 'w') as f:
         for edge in edges:
             f.write(','.join(edge) + '\n')
+
+    symbols = boards.keys()
+    numericEdges = convert_edge_list_to_numeric(symbols, edges)
+    print(numericEdges)
+
 
 if __name__ == '__main__':
     main()
