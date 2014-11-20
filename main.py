@@ -82,11 +82,13 @@ def main():
     cache = JsonCache('corporate_boards')
 
     boards = cache.retrieve(scrape_sp500_boards)
-
     print('found {} boards'.format(len(boards)))
 
     sharedMembers = find_shared_members(boards)
     edges = create_edge_list(sharedMembers)
+
+    JsonCache('multi_holders').write(sharedMembers)
+    print('found {} holders of multiple companies'.format(len(sharedMembers)))
 
     with open('edge_list.txt', 'w') as f:
         for edge in edges:
